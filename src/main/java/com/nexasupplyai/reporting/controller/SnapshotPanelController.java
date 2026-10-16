@@ -25,7 +25,10 @@ public class SnapshotPanelController {
             @RequestParam(required = false) OffsetDateTime inicio,
             @RequestParam(required = false) OffsetDateTime fin
     ) {
-        return inicio != null && fin != null ? servicio.listarPorPeriodo(inicio, fin) : servicio.listar();
+        if ((inicio == null) != (fin == null)) {
+            throw new IllegalArgumentException("Los parámetros inicio y fin deben enviarse juntos");
+        }
+        return inicio != null ? servicio.listarPorPeriodo(inicio, fin) : servicio.listar();
     }
 
     @GetMapping("/{id}")

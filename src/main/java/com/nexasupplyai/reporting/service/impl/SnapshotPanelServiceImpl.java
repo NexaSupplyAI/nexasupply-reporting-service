@@ -54,12 +54,7 @@ public class SnapshotPanelServiceImpl implements SnapshotPanelServiceInterface {
     @Override
     @Transactional
     public SnapshotPanelResponse crear(SnapshotPanelRequest r) {
-
-        if (r.finPeriodo().isBefore(r.inicioPeriodo())) {
-            throw new IllegalArgumentException(
-                    "El fin no puede ser anterior al inicio"
-            );
-        }
+        validarPeriodo(r);
 
         return mapper.aResponse(
                 repositorio.save(mapper.aEntidad(r))
@@ -73,7 +68,7 @@ public class SnapshotPanelServiceImpl implements SnapshotPanelServiceInterface {
             SnapshotPanelRequest r) {
 
         SnapshotPanel snapshot = buscar(id);
-
+        validarPeriodo(r);
         mapper.actualizarEntidad(r, snapshot);
 
         return mapper.aResponse(
@@ -90,5 +85,11 @@ public class SnapshotPanelServiceImpl implements SnapshotPanelServiceInterface {
     private SnapshotPanel buscar(UUID id) {
         return repositorio.findById(id)
                 .orElseThrow(() -> new SnapshotPanelNoEncontradoException(id));
+    }
+
+    private void validarPeriodo(SnapshotPanelRequest request) {
+        if (request.finPeriodo().isBefore(request.inicioPeriodo())) {
+            throw new IllegalArgumentException("El fin no puede ser anterior al inicio");
+        }
     }
 }
