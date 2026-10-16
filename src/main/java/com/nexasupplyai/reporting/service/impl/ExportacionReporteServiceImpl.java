@@ -6,7 +6,7 @@ import com.nexasupplyai.reporting.entity.ExportacionReporte;
 import com.nexasupplyai.reporting.mapper.ExportacionReporteMapper;
 import com.nexasupplyai.reporting.repository.ExportacionReporteRepository;
 import com.nexasupplyai.reporting.service.interfaces.ExportacionReporteServiceInterface;
-import jakarta.persistence.EntityNotFoundException;
+import com.nexasupplyai.reporting.exception.ExportacionReporteNoEncontradaException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,8 +66,6 @@ public class ExportacionReporteServiceImpl implements ExportacionReporteServiceI
 
     private ExportacionReporte buscar(UUID id) {
         return repositorio.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Exportación no encontrada: " + id
-                ));
+                .orElseThrow(() -> new ExportacionReporteNoEncontradaException(id));
     }
 }

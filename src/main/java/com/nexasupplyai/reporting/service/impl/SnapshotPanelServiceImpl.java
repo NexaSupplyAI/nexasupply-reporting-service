@@ -6,7 +6,7 @@ import com.nexasupplyai.reporting.entity.SnapshotPanel;
 import com.nexasupplyai.reporting.mapper.SnapshotPanelMapper;
 import com.nexasupplyai.reporting.repository.SnapshotPanelRepository;
 import com.nexasupplyai.reporting.service.interfaces.SnapshotPanelServiceInterface;
-import jakarta.persistence.EntityNotFoundException;
+import com.nexasupplyai.reporting.exception.SnapshotPanelNoEncontradoException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,8 +89,6 @@ public class SnapshotPanelServiceImpl implements SnapshotPanelServiceInterface {
 
     private SnapshotPanel buscar(UUID id) {
         return repositorio.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Snapshot no encontrado: " + id
-                ));
+                .orElseThrow(() -> new SnapshotPanelNoEncontradoException(id));
     }
 }
