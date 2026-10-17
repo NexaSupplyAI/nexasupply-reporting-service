@@ -157,7 +157,7 @@ public class ExportacionReporteServiceImpl implements ExportacionReporteServiceI
             Document documento = new Document();
             PdfWriter.getInstance(documento, salida);
             documento.open();
-            documento.add(new Paragraph("NexaStock AI - Reporte"));
+            documento.add(new Paragraph("NexaSupply AI - Reporte"));
             documento.add(new Paragraph(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(datos)));
             documento.close();
             return salida.toByteArray();
