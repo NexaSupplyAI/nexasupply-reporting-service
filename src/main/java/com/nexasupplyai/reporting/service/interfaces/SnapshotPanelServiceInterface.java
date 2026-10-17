@@ -20,6 +20,8 @@ public interface SnapshotPanelServiceInterface {
 
     SnapshotPanelResponse crear(SnapshotPanelRequest request);
 
+    SnapshotPanelResponse generar();
+
     SnapshotPanelResponse actualizar(
             UUID id,
             SnapshotPanelRequest request

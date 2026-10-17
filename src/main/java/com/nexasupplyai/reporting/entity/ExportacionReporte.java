@@ -38,7 +38,7 @@ public class ExportacionReporte {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
-    private EstadoExportacionReporte estado = EstadoExportacionReporte.PENDIENTE;
+    private EstadoExportacionReporte estado = EstadoExportacionReporte.PENDING;
 
     @Column(name = "storage_uri", columnDefinition = "text")
     private String uriAlmacenamiento;

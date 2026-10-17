@@ -4,15 +4,29 @@ server:
 spring:
   application:
     name: reporting-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/nexasupplyai}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: reporting
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${JWT_ISSUER_URI}
+          issuer-uri: ${JWT_ISSUER_URI:http://localhost:9999}
+          jwk-set-uri: ${JWT_JWK_SET_URI:http://localhost:9999/.well-known/jwks.json}
 
 app:
+  security:
+    enabled: ${APP_SECURITY_ENABLED:true}
   cors:
-    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
 
 clients:
   inventory-service:
@@ -21,3 +35,20 @@ clients:
     base-url: ${ORDER_SERVICE_URL:http://localhost:8082}
   supplier-service:
     base-url: ${SUPPLIER_SERVICE_URL:http://localhost:8083}
+
+reports:
+  storage:
+    type: ${REPORT_STORAGE_TYPE:local}
+    local-directory: ${REPORT_LOCAL_DIRECTORY:./build/reports}
+    blob-endpoint: ${REPORT_BLOB_ENDPOINT:}
+    blob-container: ${REPORT_BLOB_CONTAINER:reports}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
