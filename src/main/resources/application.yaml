@@ -4,10 +4,8 @@ server:
 spring:
   application:
     name: reporting-service
-  datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/nexasupplyai}
-    username: ${DB_USER:postgres}
-    password: ${DB_PASSWORD:postgres}
+  profiles:
+    default: local
   jpa:
     open-in-view: false
     hibernate:
@@ -15,16 +13,10 @@ spring:
     properties:
       hibernate:
         default_schema: reporting
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${JWT_ISSUER_URI:http://localhost:9999}
-          jwk-set-uri: ${JWT_JWK_SET_URI:http://localhost:9999/.well-known/jwks.json}
 
 app:
   security:
-    enabled: ${APP_SECURITY_ENABLED:true}
+    enabled: ${APP_SECURITY_ENABLED:false}
   cors:
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
 
@@ -35,6 +27,12 @@ clients:
     base-url: ${ORDER_SERVICE_URL:http://localhost:8082}
   supplier-service:
     base-url: ${SUPPLIER_SERVICE_URL:http://localhost:8083}
+  http:
+    connect-timeout: ${HTTP_CONNECT_TIMEOUT:3s}
+    read-timeout: ${HTTP_READ_TIMEOUT:10s}
+  authentication:
+    mode: ${INTER_SERVICE_AUTH_MODE:propagate}
+    scope: ${AZURE_INTER_SERVICE_SCOPE:}
 
 reports:
   storage:
@@ -52,3 +50,13 @@ management:
     health:
       probes:
         enabled: true
+      show-details: never
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  structured:
+    format:
+      console: ecs
