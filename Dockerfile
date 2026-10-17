@@ -11,6 +11,7 @@ RUN ./mvnw clean package -DskipTests
 FROM eclipse-temurin:21-jre-alpine
 RUN addgroup -S nexasupply && adduser -S nexasupply -G nexasupply
 WORKDIR /app
+RUN mkdir -p /app/reports && chown -R nexasupply:nexasupply /app
 COPY --from=build /workspace/target/*-SNAPSHOT.jar app.jar
 USER nexasupply
 ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75.0", "-jar", "/app/app.jar"]
