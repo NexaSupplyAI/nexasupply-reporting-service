@@ -41,6 +41,11 @@ public class SnapshotPanelController {
         return ResponseEntity.status(HttpStatus.CREATED).body(servicio.crear(request));
     }
 
+    @PostMapping("/generar")
+    public ResponseEntity<SnapshotPanelResponse> generar() {
+        return ResponseEntity.status(HttpStatus.CREATED).body(servicio.generar());
+    }
+
     @PutMapping("/{id}")
     public SnapshotPanelResponse actualizar(@PathVariable UUID id, @Valid @RequestBody SnapshotPanelRequest request) {
         return servicio.actualizar(id, request);
