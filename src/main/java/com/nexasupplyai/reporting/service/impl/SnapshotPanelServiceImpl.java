@@ -78,7 +78,10 @@ public class SnapshotPanelServiceImpl implements SnapshotPanelServiceInterface {
         snapshot.setProveedoresActivos(datos.proveedoresActivos());
         snapshot.setValorInventario(datos.valorInventario());
         snapshot.setValorPedidos(datos.valorPedidos());
-        snapshot.setContenido(datos.contenido());
+        snapshot.setContenido(Map.of(
+                "stockBajo", datos.stockBajo(),
+                "pedidosPendientes", datos.pedidosPendientesDetalle(),
+                "generadoDesde", datos.generadoDesde()));
         snapshot.setVersionesOrigen(Map.of("inventory", "v1", "orders", "v1", "suppliers", "v1"));
         return mapper.aResponse(repositorio.save(snapshot));
     }
