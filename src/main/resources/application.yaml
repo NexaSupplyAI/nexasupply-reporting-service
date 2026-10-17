@@ -15,16 +15,16 @@ spring:
     properties:
       hibernate:
         default_schema: reporting
-  flyway:
-    enabled: ${FLYWAY_ENABLED:false}
-    schemas: reporting
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${JWT_ISSUER_URI}
+          issuer-uri: ${JWT_ISSUER_URI:http://localhost:9999}
+          jwk-set-uri: ${JWT_JWK_SET_URI:http://localhost:9999/.well-known/jwks.json}
 
 app:
+  security:
+    enabled: ${APP_SECURITY_ENABLED:true}
   cors:
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
 
@@ -35,6 +35,13 @@ clients:
     base-url: ${ORDER_SERVICE_URL:http://localhost:8082}
   supplier-service:
     base-url: ${SUPPLIER_SERVICE_URL:http://localhost:8083}
+
+reports:
+  storage:
+    type: ${REPORT_STORAGE_TYPE:local}
+    local-directory: ${REPORT_LOCAL_DIRECTORY:./build/reports}
+    blob-endpoint: ${REPORT_BLOB_ENDPOINT:}
+    blob-container: ${REPORT_BLOB_CONTAINER:reports}
 
 management:
   endpoints:
