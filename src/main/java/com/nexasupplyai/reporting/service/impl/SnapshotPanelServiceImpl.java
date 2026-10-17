@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.time.ZoneOffset;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +24,7 @@ public class SnapshotPanelServiceImpl implements SnapshotPanelServiceInterface {
 
     private final SnapshotPanelRepository repositorio;
     private final SnapshotPanelMapper mapper;
+    private final DashboardAggregator aggregator;
 
     @Override
     public List<SnapshotPanelResponse> listar() {
@@ -59,6 +62,25 @@ public class SnapshotPanelServiceImpl implements SnapshotPanelServiceInterface {
         return mapper.aResponse(
                 repositorio.save(mapper.aEntidad(r))
         );
+    }
+
+    @Override
+    @Transactional
+    public SnapshotPanelResponse generar() {
+        var datos = aggregator.agregar();
+        OffsetDateTime fin = OffsetDateTime.now(ZoneOffset.UTC);
+        SnapshotPanel snapshot = new SnapshotPanel();
+        snapshot.setInicioPeriodo(fin.minusDays(1));
+        snapshot.setFinPeriodo(fin);
+        snapshot.setTotalProductos(datos.totalProductos());
+        snapshot.setProductosStockBajo(datos.productosStockBajo());
+        snapshot.setPedidosPendientes(datos.pedidosPendientes());
+        snapshot.setProveedoresActivos(datos.proveedoresActivos());
+        snapshot.setValorInventario(datos.valorInventario());
+        snapshot.setValorPedidos(datos.valorPedidos());
+        snapshot.setContenido(datos.contenido());
+        snapshot.setVersionesOrigen(Map.of("inventory", "v1", "orders", "v1", "suppliers", "v1"));
+        return mapper.aResponse(repositorio.save(snapshot));
     }
 
     @Override
